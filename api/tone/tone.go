@@ -3,6 +3,7 @@ package tone
 import (
 	"g/x/web"
 	"io/ioutil"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,6 +22,23 @@ func NewToneServer(parent *gin.RouterGroup, name string) *ToneServer {
 }
 
 func (s *ToneServer) handleListTones(c *gin.Context) {
+	var tones = getTones()
+	var page, _ = strconv.ParseInt(c.Query("page"), 10, 32)
+	var skip, _ = strconv.ParseInt(c.Query("skip"), 10, 32)
+	var start = (page - 1) * skip
+	var end = (page) * skip
+	if int(start) > len(tones) {
+		s.SendData(c, []*Tone{})
+	} else {
+		if int(end) >= len(tones) {
+			s.SendData(c, tones[start:len(tones)])
+		} else {
+			s.SendData(c, tones[start:end])
+		}
+	}
+	// c.JSON(200, tones)
+}
+func getTones() []*Tone {
 	var tones = make([]*Tone, 0)
 	files, err := ioutil.ReadDir("./upload")
 	if err != nil {
@@ -39,8 +57,7 @@ func (s *ToneServer) handleListTones(c *gin.Context) {
 			tones = append(tones, tone)
 		}
 	}
-	s.SendData(c, tones)
-	// c.JSON(200, tones)
+	return tones
 }
 
 type Tone struct {
