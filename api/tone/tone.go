@@ -40,6 +40,7 @@ func (s *ToneServer) handleListTones(c *gin.Context) {
 		}
 	}
 	s.SendData(c, tones)
+	// c.JSON(200, tones)
 }
 
 type Tone struct {
