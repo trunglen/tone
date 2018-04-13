@@ -53,6 +53,7 @@ func getTones() []*Tone {
 			var tone = &Tone{
 				Name:     f.Name(),
 				Category: file.Name(),
+				URL:      "http://192.168.11.22:3006/static/" + file.Name() + "/" + f.Name(),
 			}
 			tones = append(tones, tone)
 		}
