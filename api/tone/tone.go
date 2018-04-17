@@ -3,7 +3,7 @@ package tone
 import (
 	"g/x/web"
 	"io/ioutil"
-	"strconv"
+	"tone/global"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,20 +22,21 @@ func NewToneServer(parent *gin.RouterGroup, name string) *ToneServer {
 }
 
 func (s *ToneServer) handleListTones(c *gin.Context) {
-	var tones = getTones()
-	var page, _ = strconv.ParseInt(c.Query("page"), 10, 32)
-	var skip, _ = strconv.ParseInt(c.Query("skip"), 10, 32)
-	var start = (page - 1) * skip
-	var end = (page) * skip
-	if int(start) > len(tones) {
-		s.SendData(c, []*Tone{})
-	} else {
-		if int(end) >= len(tones) {
-			s.SendData(c, tones[start:len(tones)])
-		} else {
-			s.SendData(c, tones[start:end])
-		}
-	}
+	// var tones = getTones()
+	// var page, _ = strconv.ParseInt(c.Query("page"), 10, 32)
+	// var skip, _ = strconv.ParseInt(c.Query("skip"), 10, 32)
+	// var start = (page - 1) * skip
+	// var end = (page) * skip
+	// if int(start) > len(tones) {
+	// 	s.SendData(c, []*Tone{})
+	// } else {
+	// 	if int(end) >= len(tones) {
+	// 		s.SendData(c, tones[start:len(tones)])
+	// 	} else {
+	// 		s.SendData(c, tones[start:end])
+	// 	}
+	// }
+	s.SendData(c, global.CacheTone)
 	// c.JSON(200, tones)
 }
 func getTones() []*Tone {
@@ -53,7 +54,7 @@ func getTones() []*Tone {
 			var tone = &Tone{
 				Name:     f.Name(),
 				Category: file.Name(),
-				URL:      "http://192.168.11.22:3006/static/" + file.Name() + "/" + f.Name(),
+				URL:      "http://192.168.11.2:3006/static/" + file.Name() + "/" + f.Name(),
 			}
 			tones = append(tones, tone)
 		}

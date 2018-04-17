@@ -1,6 +1,8 @@
 package main
 
 import (
+	_ "tone/cache"
+	// 1.first remeber put above if vscode change postition
 	"net/http"
 	"tone/api"
 
